@@ -11,6 +11,8 @@ psycopg2-binary = "*"
 django-extensions = "*"
 django-filter = "*"
 djoser = "*"
+django-on-heroku = "*"
+gunicorn = "*"
 
 [dev-packages]
 
