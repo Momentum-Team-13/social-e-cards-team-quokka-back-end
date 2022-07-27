@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-    following = models.ManyToManyField("User", related_name='followers')
+    following = models.ManyToManyField("User", related_name='followers', null=True, blank=True)
     def __str__(self):
         return self.username
 
