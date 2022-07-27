@@ -57,7 +57,7 @@ class Card(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     message = models.CharField(max_length=255)
     font = models.TextField(choices=FONT_CHOICES, default=ROBOTO)
-    font_color = models.TextField(null=True, blank=True)
+    font_color = models.TextField(choices=COLOR_CHOICES, default=BLACK)
     bg_color = models.TextField(choices=COLOR_CHOICES, default=WHITE)
     border_color = models.TextField(choices=COLOR_CHOICES, default=BLACK)
     border_style = models.TextField(null=True, blank=True)
