@@ -12,3 +12,7 @@ class cardlist(ListAPIView):
 class new_card(CreateAPIView):
     queryset = Card.objects.all()
     serializer_class = NewCardSerializer
+
+class carddetail(RetrieveUpdateDestroyAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardListSerializer
