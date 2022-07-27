@@ -22,4 +22,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
     path('cards/', ecard_views.cardlist.as_view(), name='card-list'),
+    path('cards/new/', ecard_views.new_card.as_view(), name='new-card'),
 ]
