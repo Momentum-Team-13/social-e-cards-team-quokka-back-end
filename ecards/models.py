@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 # Create your models here.
 class User(AbstractUser):
     following = models.ManyToManyField("User", related_name='followers', null=True, blank=True)
     def __str__(self):
         return self.username
+
 
 class Card(models.Model):
     COMARANT_UNICASE = f"font-family: 'Cormorant Unicase', serif;"
@@ -17,7 +19,7 @@ class Card(models.Model):
     ROBOTO = f"font-family: 'Roboto', sans-serif;"
     SPECTRAL = f"font-family: 'Spectral', serif;"
     DANCING_SCRIPT = f"font-family: 'Dancing Script', cursive;"
-    
+
     FONT_CHOICES = [
         (COMARANT_UNICASE, 'Cormorant Unicase'),
         (KAUSHAN_SCRIPT, 'Kaushan Script'),
@@ -62,6 +64,6 @@ class Card(models.Model):
     border_color = models.TextField(choices=COLOR_CHOICES, default=BLACK)
     border_style = models.TextField(null=True, blank=True)
     img_src = models.TextField(null=True, blank=True)
-    
+
     def __str__(self):
         return f"{self.user_id} created a post at {self.created_at}"
