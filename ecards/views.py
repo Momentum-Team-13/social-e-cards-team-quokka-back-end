@@ -28,3 +28,5 @@ class new_card(generics.CreateAPIView):
 class carddetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
+
+# more views
