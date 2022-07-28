@@ -21,9 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
+    path("api/auth/", include("djoser.urls.authtoken")),
     path('users/', ecard_views.UserList.as_view(), name='user-list'),
     path('cards/', ecard_views.cardlist.as_view(), name='card-list'),
     path('cards/new/', ecard_views.new_card.as_view(), name='new-card'),
-    path('cards/<int:pk>/', ecard_views.carddetail.as_view(),
-         name='card-detail'),
+    path('cards/<int:pk>/', ecard_views.carddetail.as_view(), name='card-detail'),
 ]

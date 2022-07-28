@@ -3,8 +3,7 @@ from .models import User, Card
 
 
 class UserSerializer(serializers.ModelSerializer):
-    cards = serializers.PrimaryKeyRelatedField(many=True,
-                                               queryset=Card.objects.all())
+    cards = serializers.PrimaryKeyRelatedField(many=True, queryset=Card.objects.all())
 
     class Meta:
         model = User
@@ -12,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'following',
+            'cards',
         ]
 
 
