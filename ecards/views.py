@@ -5,7 +5,7 @@ from rest_framework import generics, permissions, renderers
 # from rest_framework.decorators import api_view
 
 from .models import Card, User
-# from .permissions import
+from .permissions import IsOwner
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
 
 
@@ -15,18 +15,27 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
-class cardlist(generics.ListAPIView):
+class CardList(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
 
 
-class new_card(generics.CreateAPIView):
+class NewCard(generics.CreateAPIView):
     queryset = Card.objects.all()
     serializer_class = NewCardSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+        # when a card instance is saved,
+        # the user_id is the user that made the request
 
-class carddetail(generics.RetrieveUpdateDestroyAPIView):
+
+class CardDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
 
-# more views
+
+class Profile(generics.ListAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardListSerializer
+    permission_classes = (IsOwner)
