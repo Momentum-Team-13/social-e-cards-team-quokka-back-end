@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.urlpatterns import format_suffix_patterns
 from ecards import views as ecard_views
 
 urlpatterns = [
@@ -28,6 +27,3 @@ urlpatterns = [
     path('cards/<int:pk>/', ecard_views.carddetail.as_view(),
          name='card-detail'),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
-# allows us to refer to specific file formats for endpoints

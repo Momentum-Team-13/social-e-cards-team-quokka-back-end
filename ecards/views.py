@@ -4,9 +4,9 @@ from rest_framework import generics, permissions, renderers
 # from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 
-from .models import User, Card
+from .models import Card, User
 # from .permissions import
-from .serializers import UserSerializer, CardListSerializer, NewCardSerializer
+from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
 
 
 class UserList(generics.ListAPIView):
