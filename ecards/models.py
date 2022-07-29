@@ -10,15 +10,15 @@ class User(AbstractUser):
 
 
 class Card(models.Model):
-    COMARANT_UNICASE = f"cormorant"
-    KAUSHAN_SCRIPT = f"kaushan"
-    AMANTIC_SC = f"amatic"
-    BUNGEE_SHADE = f"bungee"
-    RIGHTEOUS = f"righteous"
-    JULIUS_SANS_ONE = f"julius"
-    ROBOTO = f"roboto"
-    SPECTRAL = f"spectral"
-    DANCING_SCRIPT = f"dancing"
+    COMARANT_UNICASE = "cormorant"
+    KAUSHAN_SCRIPT = "kaushan"
+    AMANTIC_SC = "amatic"
+    BUNGEE_SHADE = "bungee"
+    RIGHTEOUS = "righteous"
+    JULIUS_SANS_ONE = "julius"
+    ROBOTO = "roboto"
+    SPECTRAL = "spectral"
+    DANCING_SCRIPT = "dancing"
 
     FONT_CHOICES = [
         (COMARANT_UNICASE, 'Cormorant Unicase'),
@@ -32,15 +32,15 @@ class Card(models.Model):
         (DANCING_SCRIPT, 'Dancing Script'),
     ]
 
-    WHITE = f"White"
-    RED = f"Red"
-    BLACK = f"Black"
-    BLUE = f"Blue"
-    GREEN = f"Green"
-    YELLOW = f"Yellow"
-    ORANGE = f"Orange"
-    PURPLE = f"Purple"
-    BROWN = f"Brown"
+    WHITE = "White"
+    RED = "Red"
+    BLACK = "Black"
+    BLUE = "Blue"
+    GREEN = "Green"
+    YELLOW = "Yellow"
+    ORANGE = "Orange"
+    PURPLE = "Purple"
+    BROWN = "Brown"
 
     COLOR_CHOICES = [
         (WHITE, 'white'),
