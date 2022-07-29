@@ -10,15 +10,15 @@ class User(AbstractUser):
 
 
 class Card(models.Model):
-    COMARANT_UNICASE = f"font-family: 'Cormorant Unicase', serif;"
-    KAUSHAN_SCRIPT = f"font-family: 'Kaushan Script', cursive;"
-    AMANTIC_SC = f"font-family: 'Amatic SC', cursive;"
-    BUNGEE_SHADE = f"font-family: 'Bungee Shade', cursive;"
-    RIGHTEOUS = f"font-family: 'Righteous', cursive;"
-    JULIUS_SANS_ONE = f"font-family: 'Julius Sans One', sans-serif;"
-    ROBOTO = f"font-family: 'Roboto', sans-serif;"
-    SPECTRAL = f"font-family: 'Spectral', serif;"
-    DANCING_SCRIPT = f"font-family: 'Dancing Script', cursive;"
+    COMARANT_UNICASE = f"cormorant"
+    KAUSHAN_SCRIPT = f"kaushan"
+    AMANTIC_SC = f"amatic"
+    BUNGEE_SHADE = f"bungee"
+    RIGHTEOUS = f"righteous"
+    JULIUS_SANS_ONE = f"julius"
+    ROBOTO = f"roboto"
+    SPECTRAL = f"spectral"
+    DANCING_SCRIPT = f"dancing"
 
     FONT_CHOICES = [
         (COMARANT_UNICASE, 'Cormorant Unicase'),
@@ -32,26 +32,26 @@ class Card(models.Model):
         (DANCING_SCRIPT, 'Dancing Script'),
     ]
 
-    WHITE = f"#FFFFFF"
-    RED = f"#FF0000"
-    BLACK = f"#000000"
-    BLUE = f"#0086FF"
-    GREEN = f"#04D61F"
-    YELLOW = f"#FFFD00"
-    ORANGE = f"#FF7F00"
-    PURPLE = f"#D100FF"
-    BROWN = f"#845A0F"
+    WHITE = f"White"
+    RED = f"Red"
+    BLACK = f"Black"
+    BLUE = f"Blue"
+    GREEN = f"Green"
+    YELLOW = f"Yellow"
+    ORANGE = f"Orange"
+    PURPLE = f"Purple"
+    BROWN = f"Brown"
 
     COLOR_CHOICES = [
-        (WHITE, 'White'),
-        (RED, 'Red'),
-        (BLACK, 'Black'),
-        (BLUE, 'Blue'),
-        (GREEN, 'Green'),
-        (YELLOW, 'Yellow'),
-        (ORANGE, 'Orange'),
-        (PURPLE, 'Purple'),
-        (BROWN, 'Brown'),
+        (WHITE, 'white'),
+        (RED, 'red'),
+        (BLACK, 'black'),
+        (BLUE, 'blue'),
+        (GREEN, 'green'),
+        (YELLOW, 'yellow'),
+        (ORANGE, 'orange'),
+        (PURPLE, 'purple'),
+        (BROWN, 'brown'),
     ]
 
     user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='cards')
