@@ -38,4 +38,9 @@ class CardDetail(generics.RetrieveUpdateDestroyAPIView):
 class Profile(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
-    permission_classes = (IsOwner)
+
+    def get_queryset(self):
+        owner_queryset = self.queryset.filter(user_id=self.request.user)
+        return owner_queryset
+        # gets all card objects, then filters by user_id
+        # returns queryset where user_id matches request of user
