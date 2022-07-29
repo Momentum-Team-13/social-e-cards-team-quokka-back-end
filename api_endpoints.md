@@ -1,5 +1,7 @@
 # Api Endpoints
 
+Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.com/)
+
 |  | Method | URL | Description |
 | --- | --- | --- | --- |
 | Authentication | POST | /api/auth/users/ | Create User |
@@ -22,11 +24,8 @@
 
 ### Create User
 
-<aside>
-💡 /api/auth/users/
-
-</aside>
-
+> /api/auth/users/
+> 
 - Method: POST
 - Data json:
 
@@ -41,11 +40,8 @@
 
 ### Login
 
-<aside>
-💡 /api/auth/token/login/
-
-</aside>
-
+> /api/auth/token/login/
+> 
 - Method: POST
 - Data json:
 
@@ -66,10 +62,8 @@
 
 ### Logout
 
-<aside>
-💡 /api/auth/token/logout/
-
-</aside>
+> /api/auth/token/logout/
+> 
 
 Method: POST
 
@@ -85,10 +79,8 @@ Response: No Data
 
 ### New Card
 
-<aside>
-💡 /cards/new/
-
-</aside>
+> /cards/new/
+> 
 
 Method: POST
 
@@ -112,10 +104,8 @@ Response: 201 Created
 
 ### See All Cards
 
-<aside>
-💡 /cards/
-
-</aside>
+> /cards/
+> 
 
 Method: GET
 
@@ -160,10 +150,8 @@ Response: Array of Greeting Cards
 
 ### Update Card
 
-<aside>
-💡 /cards/:id/
-
-</aside>
+> /cards/:id/
+> 
 
 Method: PATCH
 
@@ -179,10 +167,8 @@ Response: 200 OK
 
 ### Card Detail
 
-<aside>
-💡 /cards/:id/
-
-</aside>
+> /cards/:id/
+> 
 
 Method: GET
 
@@ -190,10 +176,8 @@ Response: Singular Card Object
 
 ### Delete Card
 
-<aside>
-💡 /cards/:id/
-
-</aside>
+> /cards/:id/
+> 
 
 Method: DELETE
 
@@ -207,10 +191,8 @@ Response: 204 No Content
 
 ### All Users
 
-<aside>
-💡 /users/
-
-</aside>
+> /users/
+> 
 
 Method: GET
 
@@ -218,10 +200,8 @@ Response: Array of All Users
 
 ### User Profile
 
-<aside>
-💡 /profile/
-
-</aside>
+> /profile/
+> 
 
 Method: GET
 
