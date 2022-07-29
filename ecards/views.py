@@ -6,6 +6,7 @@ from rest_framework import generics, permissions, renderers
 
 from .models import Card, User
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
+from ecards.permissions import IsOwner
 
 
 class UserList(generics.ListAPIView):
@@ -22,6 +23,7 @@ class CardList(generics.ListAPIView):
 class NewCard(generics.CreateAPIView):
     queryset = Card.objects.all()
     serializer_class = NewCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -37,6 +39,7 @@ class CardDetail(generics.RetrieveUpdateDestroyAPIView):
 class Profile(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         owner_queryset = self.queryset.filter(user_id=self.request.user)
