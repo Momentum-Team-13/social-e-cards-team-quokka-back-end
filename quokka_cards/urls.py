@@ -23,10 +23,10 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
+    path('profile/', ecard_views.Profile.as_view(), name='profile'),
     path('users/', ecard_views.UserList.as_view(), name='user-list'),
     path('cards/', ecard_views.CardList.as_view(), name='card-list'),
     path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
     path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
          name='card-detail'),
-    path('profile/', ecard_views.Profile.as_view(), name='profile'),
 ]

@@ -16,6 +16,18 @@ def welcome(request):
     })
 
 
+class Profile(generics.ListAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        owner_queryset = self.queryset.filter(user_id=self.request.user)
+        return owner_queryset
+        # gets all card objects, then filters by user_id
+        # returns queryset where user_id matches request of user
+
+
 class UserList(generics.ListAPIView):
     # allows creation of list of all User objects
     queryset = User.objects.all()
@@ -41,15 +53,3 @@ class NewCard(generics.CreateAPIView):
 class CardDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
-
-
-class Profile(generics.ListAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardListSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        owner_queryset = self.queryset.filter(user_id=self.request.user)
-        return owner_queryset
-        # gets all card objects, then filters by user_id
-        # returns queryset where user_id matches request of user
