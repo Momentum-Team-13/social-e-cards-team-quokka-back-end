@@ -1,12 +1,19 @@
 # from django.shortcuts import render
 from rest_framework import generics, permissions, renderers
-# from rest_framework.reverse import reverse
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from .models import Card, User
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
 from ecards.permissions import IsOwner
+
+
+@api_view(['GET'])
+def welcome(request):
+    return Response({
+        'team': 'Team Quokka',
+        'description': 'Back-end says heyyy 👋'
+    })
 
 
 class UserList(generics.ListAPIView):
