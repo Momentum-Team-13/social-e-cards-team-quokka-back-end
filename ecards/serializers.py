@@ -37,6 +37,13 @@ class CardListSerializer(serializers.ModelSerializer):
 
 
 class NewCardSerializer(serializers.ModelSerializer):
+    user_id = UserSerializer(read_only=True)
+    # this returns the entire user model nested in the card model
+
+    # user_id = serializers.ReadOnlyField(source='user_id.id')
+    # this returns only "user_id": id in the API
+    # can change to user_id.username to return only the username if preferred
+
     class Meta:
         model = Card
         fields = (
