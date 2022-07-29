@@ -7,9 +7,9 @@
 |  | POST | /api/auth/token/logout/ | Logout |
 | Greeting Cards | POST | /cards/new/ | New Card |
 |  | GET | /cards/ | See All Cards |
-|  | PATCH | /cards/<id>/ | Update Card |
-|  | GET | /cards/<id>/ | Card Detail |
-|  | DELETE | /cards/<id>/ | Delete Card |
+|  | PATCH | /cards/:id/ | Update Card |
+|  | GET | /cards/:id/ | Card Detail |
+|  | DELETE | /cards/:id/ | Delete Card |
 | Users and Following | GET | /users/ | All Users |
 |  | GET | /profile/ | User Profile |
 |  |  |  |  |
@@ -161,7 +161,7 @@ Response: Array of Greeting Cards
 ### Update Card
 
 <aside>
-💡 /cards/<id>/
+💡 /cards/:id/
 
 </aside>
 
@@ -180,7 +180,7 @@ Response: 200 OK
 ### Card Detail
 
 <aside>
-💡 /cards/<id>/
+💡 /cards/:id/
 
 </aside>
 
@@ -191,7 +191,7 @@ Response: Singular Card Object
 ### Delete Card
 
 <aside>
-💡 /cards/<id>/
+💡 /cards/:id/
 
 </aside>
 
