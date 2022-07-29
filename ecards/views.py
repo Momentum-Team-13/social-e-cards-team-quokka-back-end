@@ -5,7 +5,6 @@ from rest_framework import generics, permissions, renderers
 # from rest_framework.decorators import api_view
 
 from .models import Card, User
-from .permissions import IsOwner
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
 
 
