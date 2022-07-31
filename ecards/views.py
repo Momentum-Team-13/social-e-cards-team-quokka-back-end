@@ -1,5 +1,7 @@
 # from django.shortcuts import render
-from rest_framework import generics, permissions, renderers
+from django.shortcuts import get_object_or_404
+# from requests import post
+from rest_framework import generics, permissions, renderers, views
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
@@ -26,6 +28,16 @@ class Profile(generics.ListAPIView):
         return owner_queryset
         # gets all card objects, then filters by user_id
         # returns queryset where user_id matches request of user
+
+
+class FollowUser(views.APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+        request.user.follow(user)
+        return Response(f'{self.user} followed')
 
 
 class UserList(generics.ListAPIView):

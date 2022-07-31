@@ -29,4 +29,6 @@ urlpatterns = [
     path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
     path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
          name='card-detail'),
+    path('users/follow/', ecard_views.FollowUser.as_view(),
+         name='follow-user'),
 ]

@@ -5,8 +5,28 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class User(AbstractUser):
     following = models.ManyToManyField("User", related_name='followers', null=True, blank=True)
+
     def __str__(self):
         return self.username
+
+    def follow(self, user):
+        if user.id == self.id:
+            return
+        else:
+            self.following.add(user)
+
+    def unfollow(self, user):
+        self.following.remove(user)
+
+
+class FollowRequest(models.Model):
+    requester = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  related_name='users')
+    to_follow = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  related_name='requests')
+
+    def __str__(self):
+        return f'{self.requester} follows {self.to_follow}'
 
 
 class Card(models.Model):
