@@ -8,13 +8,15 @@ Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.c
 |  | POST | /api/auth/token/login/ | Login |
 |  | POST | /api/auth/token/logout/ | Logout |
 | Greeting Cards | POST | /cards/new/ | New Card |
-|  | GET | /cards/ | See All Cards |
+|  | GET | /cards/ | All Cards List |
 |  | PATCH | /cards/:id/ | Update Card |
 |  | GET | /cards/:id/ | Card Detail |
 |  | DELETE | /cards/:id/ | Delete Card |
-| Users and Following | GET | /users/ | All Users |
+| Users and Following | GET | /users/ | All Users List |
 |  | GET | /profile/ | User Profile |
-|  |  |  |  |
+|  | POST | /users/follow | Follow a User |
+|  | GET | /following/ | Following List |
+|  | GET | /followers/ | Followers List |
 
 ---
 
@@ -202,3 +204,38 @@ Response: Array of All Users
 Method: GET
 
 Response: Array of all cards by User
+
+### Follow a User
+
+> /users/follow
+> 
+
+Method: POST
+
+Data json
+
+```python
+{
+	"following": "<id of user to be followed>",
+}
+```
+
+Response: 201 Created
+
+### Following List
+
+> /following/
+> 
+
+Method: GET
+
+Response: Array of everyone you follow
+
+### Followers List
+
+> /followers/
+> 
+
+Method: GET
+
+Response: Array of everyone that follows you
