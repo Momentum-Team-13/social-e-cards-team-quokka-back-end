@@ -29,7 +29,12 @@ urlpatterns = [
     path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
     path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
          name='card-detail'),
-    path('users/<int:pk>/follow/', ecard_views.FollowUser.as_view(),
+    path('users/follow/', ecard_views.FollowUser.as_view(),
          name='follow-user'),
-    path('following/', ecard_views.FollowingList.as_view(), name='following_list')
+    path('users/unfollow/<int:pk>/', ecard_views.UnfollowUser.as_view(),
+         name='unfollow-user'),
+    path('users/following/', ecard_views.FollowingList.as_view(),
+         name='following_list'),
+    path('users/followers/', ecard_views.FollowingList.as_view(),
+         name='followers_list'),
 ]
