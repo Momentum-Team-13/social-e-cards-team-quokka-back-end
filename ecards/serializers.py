@@ -30,7 +30,7 @@ class FollowSerializer(serializers.ModelSerializer):
         ]
 
 
-class FollowListSerializer(serializers.ModelSerializer):
+class FollowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User

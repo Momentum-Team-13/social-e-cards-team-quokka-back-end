@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from .models import Card, User
-from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowListSerializer
+from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
 from ecards.permissions import IsOwner
 
 
@@ -38,9 +38,9 @@ class FollowUser(CreateAPIView):
     serializer_class = FollowSerializer
 
 
-class FollowList(ListAPIView):
+class FollowingList(ListAPIView):
     queryset = User.objects.all()
-    serializer_class = FollowListSerializer
+    serializer_class = FollowingListSerializer
     # permission_classes = [IsAuthenticated]
 
     # need to filter to show only users that self is following
