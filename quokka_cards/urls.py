@@ -31,5 +31,5 @@ urlpatterns = [
          name='card-detail'),
     path('users/<int:pk>/follow/', ecard_views.FollowUser.as_view(),
          name='follow-user'),
-    path('following/', ecard_views.FollowList.as_view(), name='following_list')
+    path('following/', ecard_views.FollowingList.as_view(), name='following_list')
 ]
