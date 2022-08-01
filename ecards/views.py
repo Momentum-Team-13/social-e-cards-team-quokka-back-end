@@ -1,5 +1,6 @@
 # from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from requests import request
 # from requests import post
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, DestroyAPIView
 from rest_framework.views import APIView
@@ -43,10 +44,10 @@ class FollowUser(CreateAPIView):
         # the user is the user that made the request
 
 
-class UnfollowUser(DestroyAPIView):
-    # permission_classes = [IsOwner]
-    queryset = FollowRequest.objects.all()
-    serializer_class = FollowSerializer
+# class UnfollowUser(DestroyAPIView):
+#     permission_classes = [IsOwner, ]
+#     queryset = FollowRequest.objects.all()
+#     serializer_class = FollowSerializer
 
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
@@ -54,12 +55,13 @@ class UnfollowUser(DestroyAPIView):
 
 class FollowingList(ListAPIView):
     serializer_class = FollowingListSerializer
+    # user = self.request.user
+    # queryset = FollowRequest.objects.filter(user=request.user)
     # permission_classes = [IsAuthenticated]
 
-    # need to filter to show only users that self is following
     def get_queryset(self):
         user = self.request.user
-        queryset = FollowRequest.objects.filter(following=user)
+        queryset = FollowRequest.objects.filter(user=user)
         return queryset
 
 
@@ -69,8 +71,8 @@ class FollowerList(ListAPIView):
 
     # need to filter to show only users that self is following
     def get_queryset(self):
-        user = self.request.user
-        queryset = FollowRequest.objects.filter(followers=user)
+        following = self.request.user
+        queryset = FollowRequest.objects.filter(following=following)
         return queryset
 
 

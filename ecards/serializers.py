@@ -31,10 +31,11 @@ class FollowSerializer(serializers.ModelSerializer):
 class FollowingListSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = FollowRequest
         fields = [
             'id',
-            'username',
+            'user',
+            'following',
         ]
 
 
