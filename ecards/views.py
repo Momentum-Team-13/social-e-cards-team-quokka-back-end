@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 
 from .models import Card, User, FollowRequest
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
-from ecards.permissions import IsOwner
+from ecards.permissions import IsOwner, IsOwnerOrReadOnly
 
 
 @api_view(['GET'])
@@ -75,7 +75,7 @@ class FollowerList(ListAPIView):
 
 
 class UserList(ListAPIView):
-    # allows creation of list of all User objects
+    # allows list of all User objects
     queryset = User.objects.all().order_by("username")
     serializer_class = UserSerializer
 
@@ -99,3 +99,4 @@ class NewCard(CreateAPIView):
 class CardDetail(RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
