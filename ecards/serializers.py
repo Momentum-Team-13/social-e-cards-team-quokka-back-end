@@ -17,6 +17,29 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
+class FollowSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='user_id.id')
+    username = serializers.ReadOnlyField(source='user_id.username')
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'following',
+        ]
+
+
+class FollowListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+        ]
+
+
 class CardListSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')
