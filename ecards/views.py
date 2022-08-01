@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 
 from .models import Card, User
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer
-from ecards.permissions import IsOwner
+from ecards.permissions import IsOwner, IsOwnerOrReadOnly
 
 
 @api_view(['GET'])
@@ -53,3 +53,6 @@ class NewCard(generics.CreateAPIView):
 class CardDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+
