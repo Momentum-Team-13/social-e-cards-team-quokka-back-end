@@ -75,11 +75,19 @@ class FollowerList(ListAPIView):
         queryset = FollowRequest.objects.filter(following=following)
         return queryset
 
-
 class UserList(ListAPIView):
-    # allows list of all User objects
-    queryset = User.objects.all().order_by("username")
     serializer_class = UserSerializer
+    def get_queryset(self):
+        # we want this to work for requests that don't include a search term as well
+        queryset = User.objects.all().order_by("username")
+        # handle the case where we have query params that include a "search" key
+        # if there are no search terms that match "search" this will be None
+        search_term = self.request.query_params.get("username")
+        if search_term is not None:
+            # filter using the search term
+            queryset = User.objects.filter(username__icontains=search_term).order_by("username")
+
+        return queryset
 
 
 class CardList(ListAPIView):
