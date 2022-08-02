@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+from csv import unregister_dialect
 from django.shortcuts import get_object_or_404
 from requests import request
 # from requests import post
@@ -34,7 +35,7 @@ class Profile(ListAPIView):
 
 
 class FollowUser(CreateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = FollowRequest.objects.all()
     serializer_class = FollowSerializer
 
@@ -44,13 +45,17 @@ class FollowUser(CreateAPIView):
         # the user is the user that made the request
 
 
-# class UnfollowUser(DestroyAPIView):
-#     permission_classes = [IsOwner, ]
-#     queryset = FollowRequest.objects.all()
-#     serializer_class = FollowSerializer
+class UnfollowUser(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FollowSerializer
+    def get_queryset(self):
+        search_term = self.request.query_params.get("username")
+        if search_term is not None:
+            # filter using the search term
+            queryset = FollowRequest.objects.filter(following__icontains=search_term, user = self.request.user)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+        return queryset
+
 
 
 class FollowingList(ListAPIView):
@@ -91,7 +96,7 @@ class UserList(ListAPIView):
 
 
 class CardList(ListAPIView):
-    queryset = Card.objects.all()
+    queryset = Card.objects.all().order_by("-created_at")
     serializer_class = CardListSerializer
 
 
@@ -110,3 +115,14 @@ class CardDetail(RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+
+class CardTimeline(ListAPIView):
+    serializer_class = CardListSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        queryset = Card.objects.none()
+        following_list = FollowRequest.objects.filter(user=self.request.user)
+        for follow in following_list:
+            following_cards = Card.objects.filter(user_id=follow.following)
+            queryset = queryset | following_cards
+        return queryset.order_by("-created_at")
