@@ -2,36 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
 class User(AbstractUser):
-    # following = models.ManyToManyField("User", related_name='followers',
-    #                                    null=True, blank=True)
-
-    # def follow(self, user):
-    #     if user.id == self.id:
-    #         return
-    #     else:
-    #         self.following.add(user)
-
-    # def unfollow(self, user):
-    #     self.following.remove(user)
-
-    # @property
-    # def following(self):
-    #     return self.following.all()
-
-    # @property
-    # def followers(self):
-    #     return self.followers.all()
 
     def __str__(self):
         return self.username
 
 
-# through model for M2M field on User model
-class FollowRequest(models.Model):
+class Follow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='users')
+                             related_name='follows')
     following = models.ForeignKey(User, on_delete=models.CASCADE,
                                   related_name='followers')
 
@@ -81,7 +60,8 @@ class Card(models.Model):
         (BROWN, 'brown'),
     ]
 
-    user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name='cards')
+    user_id = models.ForeignKey("User", on_delete=models.CASCADE,
+                                related_name='cards')
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     message = models.CharField(max_length=255)

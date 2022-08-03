@@ -7,19 +7,20 @@ Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.c
 | Authentication | POST | /api/auth/users/ | Create User |
 |  | POST | /api/auth/token/login/ | Login |
 |  | POST | /api/auth/token/logout/ | Logout |
-| Greeting Cards | POST | /cards/new/ | New Card |
-|  | GET | /cards/ | All Cards List |
-|  | GET | /cards/timeline/ | Card Timeline for Following |
-|  | PATCH | /cards/:id/ | Update Card |
-|  | GET | /cards/:id/ | Card Detail |
-|  | DELETE | /cards/:id/ | Delete Card |
 | Users and Following | GET | /users/ | All Users List |
 |  | GET | /users/?username=<searched username> | Search for User |
-|  | GET | /profile/ | User Profile |
 |  | POST | /users/follow | Follow a User |
 |  | DELETE | /users/unfollow/:id | Unfollow a User |
 |  | GET | /following/ | Following List |
 |  | GET | /followers/ | Followers List |
+| Greeting Cards | POST | /cards/new/ | New Card |
+|  | GET | /cards/:id/ | Card Detail |
+|  | PUT/PATCH | /cards/:id/ | Update Card |
+|  | DELETE | /cards/:id/ | Delete Card |
+|  | GET | /cards/ | All Cards List |
+|  | GET | /cards/timeline/ | Timeline for Following Cards |
+|  | GET | /user/:id/ | User Detail Cards |
+|  | GET | /profile/ | Profile |
 
 ---
 
@@ -78,6 +79,78 @@ Response: No Data
 
 ---
 
+## Users and Following
+
+---
+
+### All Users
+
+> /users/
+> 
+
+Method: GET
+
+Response: Array of all users
+
+### Search for a User
+
+> /users/?username=<searched username>
+> 
+
+Method: GET
+
+Response: Array of all users meeting the criteria of the search term
+
+### Follow a User
+
+> /users/follow/
+> 
+
+Method: POST
+
+Data json
+
+```python
+{
+	"following": "<id of user to be followed>",
+}
+```
+
+Response: 201 Created
+
+### Unfollow a User
+
+> /users/unfollow/:id
+> 
+
+Note: Id is the id of the user to unfollow
+
+Method: DELETE
+
+Data json
+
+Response: 204 No Content
+
+### Following List
+
+> /following/
+> 
+
+Method: GET
+
+Response: Array of all users that the logged in user is following
+
+### Followers List
+
+> /followers/
+> 
+
+Method: GET
+
+Response: Array of all users that are following the logged in user
+
+---
+
 ## Greeting Cards
 
 ---
@@ -93,7 +166,7 @@ Data json:
 
 ```python
 {
-	"user_id": "<This field is required.>",
+	"user_id": "<This field is automatically populated.>",
 	"title": "<Not required>",
 	"message": "<This field is required.>",
 	"font": "<Default = Roboto>",
@@ -107,6 +180,45 @@ Data json:
 
 Response: 201 Created
 
+### Card Detail
+
+> /cards/:id
+> 
+
+Note: Id is the id of the card object
+
+Method: GET
+
+Response: Single card object
+
+### Update Card
+
+> /cards/:id
+> 
+
+Method: PATCH
+
+Data json: Example
+
+```python
+{
+	"title": "This is a New Title",
+}
+```
+
+Response: 200 OK
+
+### Delete Card
+
+> /cards/:id
+> 
+
+Note: Id is the id of the card to delete
+
+Method: DELETE
+
+Response: 204 No Content
+
 ### See All Cards
 
 > /cards/
@@ -114,7 +226,7 @@ Response: 201 Created
 
 Method: GET
 
-Response: Array of Greeting Cards
+Response: Array of all greeting cards
 
 ```python
 [
@@ -149,124 +261,33 @@ Response: Array of Greeting Cards
 ]
 ```
 
-### Card Timeline for Following
+### Timeline for Following Cards
 
-Method: GET
-
-Response: Array of cards from people the user follows
-
-### Update Card
-
-> /cards/:id/
-> 
-
-Method: PATCH
-
-Data json: Example
-
-```python
-{
-	"title": "This is a New Title",
-}
-```
-
-Response: 200 OK
-
-### Card Detail
-
-> /cards/:id/
+> /cards/timeline/
 > 
 
 Method: GET
 
-Response: Singular Card Object
+Response: Array of cards created by users the logged in user is following
 
-### Delete Card
+### User Detail Cards
 
-> /cards/:id/
+> /users/:id
 > 
 
-Method: DELETE
-
-Response: 204 No Content
-
----
-
-## Users and Following
-
----
-
-### All Users
-
-> /users/
-> 
+Note: Id is the id of the user
 
 Method: GET
 
-Response: Array of All Users
+Response: Array of cards created by another user
 
-### Search for a User
-
-> /users/?username=<searched username>
-> 
-
-Method: GET
-
-Response: Array of All users meeting the criteria of the search term
-
-### User Profile
+### Profile
 
 > /profile/
 > 
 
 Method: GET
 
-Response: Array of all cards by User
+Response: Array of all cards created by the logged in user
 
-### Follow a User
-
-> /users/follow
-> 
-
-Method: POST
-
-Data json
-
-```python
-{
-	"following": "<id of user to be followed>",
-}
-```
-
-Response: 201 Created
-
-### Unfollow a User
-
-> /users/unfollow/:id
-> 
-
-Note: Id is the id of the user you want to unfollow
-
-Method: DELETE
-
-Data json
-
-Response: 204 No Content
-
-### Following List
-
-> /following/
-> 
-
-Method: GET
-
-Response: Array of everyone you follow
-
-### Followers List
-
-> /followers/
-> 
-
-Method: GET
-
-Response: Array of everyone that follows you
+---

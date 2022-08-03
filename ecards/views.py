@@ -1,17 +1,18 @@
-# from django.shortcuts import render
-from csv import unregister_dialect
 from django.shortcuts import get_object_or_404
-from requests import request
-# from requests import post
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, DestroyAPIView, RetrieveAPIView
-from rest_framework.views import APIView
+
+from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
-from .models import Card, User, FollowRequest
+from .models import Card, Follow, User
+from .permissions import IsOwnerOrReadOnly
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
-from ecards.permissions import IsOwner, IsOwnerOrReadOnly
+
+
+'''
+Root API View
+'''
 
 
 @api_view(['GET'])
@@ -22,56 +23,62 @@ def welcome(request):
     })
 
 
-class Profile(ListAPIView):
-    queryset = Card.objects.all().order_by("created_at")
-    serializer_class = CardListSerializer
-    permission_classes = [IsAuthenticated]
+'''
+Create, Update, Destroy API Views
+'''
 
-    def get_queryset(self):
-        owner_queryset = self.queryset.filter(user_id=self.request.user)
-        return owner_queryset
-        # gets all card objects, then filters by user_id
-        # returns queryset where user_id matches request of user
 
-class UserDetail(ListAPIView):
-    queryset = Card.objects.all().order_by("created_at")
-    serializer_class = CardListSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        owner_queryset = self.queryset.filter(user_id=self.kwargs['pk'])
-        return owner_queryset
-
+# allows creation of Follow object
 class FollowUser(CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = FollowRequest.objects.all()
+    queryset = Follow.objects.all()
     serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-        # when a followrequest instance is saved,
-        # the user is the user that made the request
+        # when a Follow object is saved,
+        # the user is set as the user that made the request
 
 
-class UnfollowUser(DestroyAPIView):
+# allows creation of Card object
+class NewCard(CreateAPIView):
+    queryset = Card.objects.all()
+    serializer_class = NewCardSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+        # when a Card object is saved,
+        # the user_id is set as the user that made the request
+
+
+# allows GET, PUT, PATCH, DELETE of Card object
+class CardDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardListSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+    # requires user making request to own Card object
+    # otherwise is ReadOnly access
+
+
+# allows DELETE of Follow object
+class UnfollowUser(DestroyAPIView):
+    queryset = Follow.objects.all()
     serializer_class = FollowSerializer
-    queryset = FollowRequest.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        """
-        Returns the object the view is displaying.
-
-        You may want to override this if you need to provide non-standard
-        queryset lookups.  Eg if objects are referenced using multiple
-        keyword arguments in the url conf.
-        """
         queryset = self.filter_queryset(self.get_queryset())
         following_pk = self.kwargs
-        instance_of_follow_id = FollowRequest.objects.filter(user=self.request.user, following=following_pk['pk']).first().id
+        # establishes variable for kwarg dictionary
+        instance_of_follow_id = Follow.objects.filter(user=self.request.user, following=following_pk['pk']).first().id
+        breakpoint()
+        # establishes variable to filter for Follow object id
+        # of user-following relationship
         new_kwarg = {}
+        # establishes variable for new kwarg
         new_kwarg['pk'] = instance_of_follow_id
-        # Perform the lookup filtering.
+        # inserts pk of user-following relationship to new kwarg dictionary
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in new_kwarg, (
@@ -84,78 +91,95 @@ class UnfollowUser(DestroyAPIView):
         filter_kwargs = {self.lookup_field: new_kwarg[lookup_url_kwarg]}
         obj = get_object_or_404(queryset, **filter_kwargs)
 
-        # May raise a permission denied
         self.check_object_permissions(self.request, obj)
 
         return obj
 
 
-
-class FollowingList(ListAPIView):
-    serializer_class = FollowingListSerializer
-    # user = self.request.user
-    # queryset = FollowRequest.objects.filter(user=request.user)
-    # permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = FollowRequest.objects.filter(user=user)
-        return queryset
+'''
+List API Views
+'''
 
 
-class FollowerList(ListAPIView):
-    serializer_class = FollowingListSerializer
-    # permission_classes = [IsAuthenticated]
-
-    # need to filter to show only users that self is following
-    def get_queryset(self):
-        following = self.request.user
-        queryset = FollowRequest.objects.filter(following=following)
-        return queryset
-
-class UserList(ListAPIView):
-    serializer_class = UserSerializer
-    def get_queryset(self):
-        # we want this to work for requests that don't include a search term as well
-        queryset = User.objects.all().order_by("username")
-        # handle the case where we have query params that include a "search" key
-        # if there are no search terms that match "search" this will be None
-        search_term = self.request.query_params.get("username")
-        if search_term is not None:
-            # filter using the search term
-            queryset = User.objects.filter(username__icontains=search_term).order_by("username")
-
-        return queryset
-
-
+# returns list of all cards created
 class CardList(ListAPIView):
     queryset = Card.objects.all().order_by("-created_at")
     serializer_class = CardListSerializer
 
 
-class NewCard(CreateAPIView):
-    queryset = Card.objects.all()
-    serializer_class = NewCardSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user_id=self.request.user)
-        # when a card instance is saved,
-        # the user_id is the user that made the request
-
-
-class CardDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardListSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-
+# returns list of all cards by users being followed
 class CardTimeline(ListAPIView):
     serializer_class = CardListSerializer
     permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         queryset = Card.objects.none()
-        following_list = FollowRequest.objects.filter(user=self.request.user)
+        following_list = Follow.objects.filter(user=self.request.user)
         for follow in following_list:
             following_cards = Card.objects.filter(user_id=follow.following)
             queryset = queryset | following_cards
+            # filter objects where user_id is following attribute ?
         return queryset.order_by("-created_at")
+
+
+# returns list of all cards created by another user
+class UserDetail(ListAPIView):
+    queryset = Card.objects.all().order_by("created_at")
+    serializer_class = CardListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user_id=self.kwargs['pk'])
+        # filter objects where user_id is the user pk kwarg
+        return queryset
+
+
+# returns list of all cards created by the user
+class Profile(ListAPIView):
+    queryset = Card.objects.all().order_by("created_at")
+    serializer_class = CardListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user_id=self.request.user)
+        # filter objects where user_id is user making the request
+        return queryset
+
+
+# returns list of users being followed by the user making the request
+class FollowingList(ListAPIView):
+    serializer_class = FollowingListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Follow.objects.filter(user=self.request.user)
+        # filter objects where user attribute is user making the request
+        return queryset
+
+
+# returns list of users following the user making the request
+class FollowerList(ListAPIView):
+    serializer_class = FollowingListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Follow.objects.filter(following=self.request.user)
+        # filter objects where following attribute is user making the request
+        return queryset
+
+
+# returns list of all users
+class UserList(ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = User.objects.all().order_by("username")
+        # establish queryset of all User objects ordered by username
+        search_term = self.request.query_params.get("username")
+        # establishes variable to get query params by "search" key "username"
+        # if no keys match, will return None
+        if search_term is not None:
+            queryset = User.objects.filter(username__icontains=search_term).order_by("username")
+            # overrides queryset when search_term is present
+            # filter objects where username contains search_term
+        return queryset

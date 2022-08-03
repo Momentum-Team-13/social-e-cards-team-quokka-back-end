@@ -1,8 +1,8 @@
-from asyncio.format_helpers import _format_callback_source
 from rest_framework import serializers
-from .models import FollowRequest, User, Card
+from .models import Card, Follow, User
 
 
+# used in UserList view
 class UserSerializer(serializers.ModelSerializer):
     cards = serializers.PrimaryKeyRelatedField(many=True,
                                                queryset=Card.objects.all())
@@ -15,29 +15,38 @@ class UserSerializer(serializers.ModelSerializer):
             'cards',
         ]
 
+
+# used in Follow and Unfollow views
 class FollowSerializer(serializers.ModelSerializer):
-    # id = serializers.ReadOnlyField(source='user_id.id')
     user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
-        model = FollowRequest
+        model = Follow
         fields = [
             'user',
             'following',
         ]
 
 
+# used in FollowingList and FollowerList views
 class FollowingListSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
+    user_username = serializers.ReadOnlyField(source='user.username')
+    following_id = serializers.ReadOnlyField(source='following.id')
+    following_username = serializers.ReadOnlyField(source='following.username')
 
     class Meta:
-        model = FollowRequest
+        model = Follow
         fields = [
             'id',
-            'user',
-            'following',
+            'user_id',
+            'user_username',
+            'following_id',
+            'following_username',
         ]
 
 
+# user in CardList, CardTimeline, and Profile views
 class CardListSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')
@@ -60,14 +69,10 @@ class CardListSerializer(serializers.ModelSerializer):
             )
 
 
+# used in NewCard and CardDetail views
 class NewCardSerializer(serializers.ModelSerializer):
-    # user_id = UserSerializer(read_only=True)
-    # this returns the entire user model nested in the card model
-
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')
-    # this returns only "user_id": id in the API
-    # can change to user_id.username to return only the username if preferred
 
     class Meta:
         model = Card
