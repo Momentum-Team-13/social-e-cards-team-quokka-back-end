@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls.authtoken')),
     path('profile/', ecard_views.Profile.as_view(), name='profile'),
     path('users/', ecard_views.UserList.as_view(), name='user-list'),
+    path('users/<int:pk>', ecard_views.UserDetail.as_view(), name='user-detail'),
     path('cards/', ecard_views.CardList.as_view(), name='card-list'),
     path('cards/timeline/', ecard_views.CardTimeline.as_view(), name='card-timeline'),
     path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
