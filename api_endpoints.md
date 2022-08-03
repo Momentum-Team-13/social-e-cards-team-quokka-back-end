@@ -19,7 +19,7 @@ Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.c
 |  | DELETE | /cards/:id/ | Delete Card |
 |  | GET | /cards/ | All Cards List |
 |  | GET | /cards/timeline/ | Timeline for Following Cards |
-|  | GET | /user/:id/ | User Detail Cards |
+|  | GET | /users/:id/ | User Detail Cards |
 |  | GET | /profile/ | Profile |
 
 ---
