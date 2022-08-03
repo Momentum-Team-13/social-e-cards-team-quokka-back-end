@@ -9,12 +9,15 @@ Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.c
 |  | POST | /api/auth/token/logout/ | Logout |
 | Greeting Cards | POST | /cards/new/ | New Card |
 |  | GET | /cards/ | All Cards List |
+|  | GET | /cards/timeline/ | Card Timeline for Following |
 |  | PATCH | /cards/:id/ | Update Card |
 |  | GET | /cards/:id/ | Card Detail |
 |  | DELETE | /cards/:id/ | Delete Card |
 | Users and Following | GET | /users/ | All Users List |
+|  | GET | /users/?username=<searched username> | Search for User |
 |  | GET | /profile/ | User Profile |
 |  | POST | /users/follow | Follow a User |
+|  | DELETE | /users/unfollow/:id | Unfollow a User |
 |  | GET | /following/ | Following List |
 |  | GET | /followers/ | Followers List |
 
@@ -146,6 +149,12 @@ Response: Array of Greeting Cards
 ]
 ```
 
+### Card Timeline for Following
+
+Method: GET
+
+Response: Array of cards from people the user follows
+
 ### Update Card
 
 > /cards/:id/
@@ -196,6 +205,15 @@ Method: GET
 
 Response: Array of All Users
 
+### Search for a User
+
+> /users/?username=<searched username>
+> 
+
+Method: GET
+
+Response: Array of All users meeting the criteria of the search term
+
 ### User Profile
 
 > /profile/
@@ -221,6 +239,19 @@ Data json
 ```
 
 Response: 201 Created
+
+### Unfollow a User
+
+> /users/unfollow/:id
+> 
+
+Note: Id is the id of the user you want to unfollow
+
+Method: DELETE
+
+Data json
+
+Response: 204 No Content
 
 ### Following List
 
