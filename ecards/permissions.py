@@ -1,13 +1,13 @@
 from rest_framework import permissions
 
 
-# Allows only owner of object to access object
+# allows only owner of object to access object
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user
 
 
-# Allows only owner of object to edit object
+# allows only owner of object to edit object
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:

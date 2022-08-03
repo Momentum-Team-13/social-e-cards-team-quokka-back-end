@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Follow, User, Card
-# Register your models here.
+from .models import Card, Follow, User
 
-admin.site.register(User)
 admin.site.register(Card)
 admin.site.register(Follow)
+admin.site.register(User)

@@ -19,9 +19,13 @@ from ecards import views as ecard_views
 
 urlpatterns = [
 
-    # setup endpoints
+    # root endpoint
     path('', ecard_views.welcome),
+
+    # admin endpoint
     path('admin/', admin.site.urls),
+
+    # authentication endpoints
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
