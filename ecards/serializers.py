@@ -1,8 +1,8 @@
-from asyncio.format_helpers import _format_callback_source
 from rest_framework import serializers
-from .models import Follow, User, Card
+from .models import Card, Follow, User
 
 
+# used in UserList view
 class UserSerializer(serializers.ModelSerializer):
     cards = serializers.PrimaryKeyRelatedField(many=True,
                                                queryset=Card.objects.all())
@@ -72,13 +72,8 @@ class CardListSerializer(serializers.ModelSerializer):
 
 
 class NewCardSerializer(serializers.ModelSerializer):
-    # user_id = UserSerializer(read_only=True)
-    # this returns the entire user model nested in the card model
-
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')
-    # this returns only "user_id": id in the API
-    # can change to user_id.username to return only the username if preferred
 
     class Meta:
         model = Card

@@ -1,17 +1,18 @@
-# from django.shortcuts import render
-from csv import unregister_dialect
 from django.shortcuts import get_object_or_404
-from requests import request
-# from requests import post
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, DestroyAPIView
-from rest_framework.views import APIView
+
+from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
-from .models import Card, User, Follow
+from .models import Card, Follow, User
+from .permissions import IsOwnerOrReadOnly
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
-from ecards.permissions import IsOwner, IsOwnerOrReadOnly
+
+
+'''
+Root API View
+'''
 
 
 @api_view(['GET'])
@@ -29,14 +30,14 @@ Create, Update, Destroy API Views
 
 # allows creation of Follow object
 class FollowUser(CreateAPIView):
-    permission_classes = [IsAuthenticated]
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-        # when a Follow instance is saved,
-        # the user is the user that made the request
+        # when a Follow object is saved,
+        # the user is set as the user that made the request
 
 
 # allows creation of Card object
@@ -47,37 +48,39 @@ class NewCard(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
-        # when a card instance is saved,
-        # the user_id is the user that made the request
+        # when a Card object is saved,
+        # the user_id is set as the user that made the request
 
 
-# allows GET
+# allows GET, PUT, PATCH, DELETE of Card object
 class CardDetail(RetrieveUpdateDestroyAPIView):
     queryset = Card.objects.all()
     serializer_class = CardListSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    # requires user making request to own Card object
+    # otherwise is ReadOnly access
 
 
+# allows DELETE of Follow object
 class UnfollowUser(DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = FollowSerializer
     queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        """
-        Returns the object the view is displaying.
-
-        You may want to override this if you need to provide non-standard
-        queryset lookups.  Eg if objects are referenced using multiple
-        keyword arguments in the url conf.
-        """
         queryset = self.filter_queryset(self.get_queryset())
         following_pk = self.kwargs
+        # establishes variable for kwarg
         instance_of_follow_id = Follow.objects.filter(user=self.request.user, following=following_pk['pk']).first().id
+        # establishes variable to filter objects
+        # where user attribute is user making request
+        # where following attribute is kwarg ?
         new_kwarg = {}
+        # establishes variable for new kwarg as empty dictionary
         new_kwarg['pk'] = instance_of_follow_id
-        # Perform the lookup filtering.
+        #  
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        # establishes url kwarg
 
         assert lookup_url_kwarg in new_kwarg, (
             'Expected view %s to be called with a URL keyword argument '
@@ -89,7 +92,6 @@ class UnfollowUser(DestroyAPIView):
         filter_kwargs = {self.lookup_field: new_kwarg[lookup_url_kwarg]}
         obj = get_object_or_404(queryset, **filter_kwargs)
 
-        # May raise a permission denied
         self.check_object_permissions(self.request, obj)
 
         return obj
@@ -117,6 +119,7 @@ class CardTimeline(ListAPIView):
         for follow in following_list:
             following_cards = Card.objects.filter(user_id=follow.following)
             queryset = queryset | following_cards
+            # filter objects where user_id is following attribute ?
         return queryset.order_by("-created_at")
 
 
@@ -127,35 +130,34 @@ class Profile(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        owner_queryset = self.queryset.filter(user_id=self.request.user)
-        return owner_queryset
+        queryset = self.queryset.filter(user_id=self.request.user)
         # filter objects where user_id is user making request
-        # return queryset of objects owned by user making request
+        return queryset
 
 
-# returns list of users being followed
+# returns list of users being followed by the user making the request
 class FollowingList(ListAPIView):
     serializer_class = FollowingListSerializer
-    # queryset = Follow.objects.filter(user=request.user)
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Follow.objects.filter(user=self.request.user)
-        # filter objects where user is user making request
+        # filter objects where user attribute is user making request
         return queryset
 
 
+# returns list of users following the user making the request
 class FollowerList(ListAPIView):
     serializer_class = FollowingListSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    # need to filter to show only users that self is following
     def get_queryset(self):
-        following = self.request.user
-        queryset = Follow.objects.filter(following=following)
+        queryset = Follow.objects.filter(following=self.request.user)
+        # filter objects where following attribute is user making request
         return queryset
 
 
+# returns list of all users
 class UserList(ListAPIView):
     serializer_class = UserSerializer
 
@@ -163,11 +165,10 @@ class UserList(ListAPIView):
         queryset = User.objects.all().order_by("username")
         # establish queryset of all User objects ordered by username
         search_term = self.request.query_params.get("username")
-        # establishes variable to get query params
-        # "search" key is "username"
+        # establishes variable to get query params by "search" key "username"
         # if no keys match, will return None
         if search_term is not None:
-            # filter using the search term
             queryset = User.objects.filter(username__icontains=search_term).order_by("username")
+            # overrides queryset when search_term is present
+            # filter objects where username contains search_term
         return queryset
-
