@@ -48,7 +48,7 @@ class FollowUser(CreateAPIView):
 class UnfollowUser(DestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FollowSerializer
-    queryset = FollowRequest
+    queryset = FollowRequest.objects.all()
 
     def get_object(self):
         """
