@@ -3,7 +3,7 @@ from csv import unregister_dialect
 from django.shortcuts import get_object_or_404
 from requests import request
 # from requests import post
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, DestroyAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -33,6 +33,14 @@ class Profile(ListAPIView):
         # gets all card objects, then filters by user_id
         # returns queryset where user_id matches request of user
 
+class UserDetail(ListAPIView):
+    queryset = Card.objects.all().order_by("created_at")
+    serializer_class = CardListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        owner_queryset = self.queryset.filter(user_id=self.kwargs['pk'])
+        return owner_queryset
 
 class FollowUser(CreateAPIView):
     permission_classes = [IsAuthenticated]

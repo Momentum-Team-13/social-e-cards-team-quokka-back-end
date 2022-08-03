@@ -15,7 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
             'cards',
         ]
 
-
 class FollowSerializer(serializers.ModelSerializer):
     # id = serializers.ReadOnlyField(source='user_id.id')
     user = serializers.ReadOnlyField(source='user.username')
