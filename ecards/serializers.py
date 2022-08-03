@@ -16,22 +16,19 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
+# used in Follow and Unfollow views
 class FollowSerializer(serializers.ModelSerializer):
-    user_id = serializers.ReadOnlyField(source='user.id')
-    user_username = serializers.ReadOnlyField(source='user.username')
-    following_id = serializers.ReadOnlyField(source='following.id')
-    following_username = serializers.ReadOnlyField(source='following.username')
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Follow
         fields = [
-            'user_id',
-            'user_username',
-            'following_id',
-            'following_username',
+            'user',
+            'following',
         ]
 
 
+# used in FollowingList and FollowerList views
 class FollowingListSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user.id')
     user_username = serializers.ReadOnlyField(source='user.username')
@@ -49,6 +46,7 @@ class FollowingListSerializer(serializers.ModelSerializer):
         ]
 
 
+# user in CardList, CardTimeline, and Profile views
 class CardListSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')
@@ -71,6 +69,7 @@ class CardListSerializer(serializers.ModelSerializer):
             )
 
 
+# used in NewCard and CardDetail views
 class NewCardSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user_id.id')
     username = serializers.ReadOnlyField(source='user_id.username')

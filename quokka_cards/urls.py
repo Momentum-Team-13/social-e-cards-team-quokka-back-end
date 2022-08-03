@@ -18,18 +18,16 @@ from django.urls import path, include
 from ecards import views as ecard_views
 
 urlpatterns = [
+
+    # setup endpoints
     path('', ecard_views.welcome),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
-    path('profile/', ecard_views.Profile.as_view(), name='profile'),
+
+    # user endpoints
     path('users/', ecard_views.UserList.as_view(), name='user-list'),
-    path('cards/', ecard_views.CardList.as_view(), name='card-list'),
-    path('cards/timeline/', ecard_views.CardTimeline.as_view(), name='card-timeline'),
-    path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
-    path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
-         name='card-detail'),
     path('users/follow/', ecard_views.FollowUser.as_view(),
          name='follow-user'),
     path('users/unfollow/<int:pk>', ecard_views.UnfollowUser.as_view(),
@@ -38,4 +36,13 @@ urlpatterns = [
          name='following_list'),
     path('followers/', ecard_views.FollowerList.as_view(),
          name='followers_list'),
+
+    # card endpoints
+    path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
+    path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
+         name='card-detail'),
+    path('cards/', ecard_views.CardList.as_view(), name='card-list'),
+    path('cards/timeline/', ecard_views.CardTimeline.as_view(),
+         name='card-timeline'),
+    path('profile/', ecard_views.Profile.as_view(), name='profile'),
 ]

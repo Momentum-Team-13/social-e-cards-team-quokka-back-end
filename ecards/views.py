@@ -70,17 +70,16 @@ class UnfollowUser(DestroyAPIView):
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         following_pk = self.kwargs
-        # establishes variable for kwarg
+        # establishes variable for kwarg dictionary
         instance_of_follow_id = Follow.objects.filter(user=self.request.user, following=following_pk['pk']).first().id
-        # establishes variable to filter objects
-        # where user attribute is user making request
-        # where following attribute is kwarg ?
+        breakpoint()
+        # establishes variable to filter for Follow object id
+        # of user-following relationship
         new_kwarg = {}
-        # establishes variable for new kwarg as empty dictionary
+        # establishes variable for new kwarg
         new_kwarg['pk'] = instance_of_follow_id
-        #  
+        # inserts pk of user-following relationship to new kwarg dictionary
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-        # establishes url kwarg
 
         assert lookup_url_kwarg in new_kwarg, (
             'Expected view %s to be called with a URL keyword argument '
