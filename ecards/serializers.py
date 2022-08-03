@@ -1,6 +1,6 @@
 from asyncio.format_helpers import _format_callback_source
 from rest_framework import serializers
-from .models import FollowRequest, User, Card
+from .models import Follow, User, Card
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,25 +17,35 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    # id = serializers.ReadOnlyField(source='user_id.id')
-    user = serializers.ReadOnlyField(source='user.username')
+    user_id = serializers.ReadOnlyField(source='user.id')
+    user_username = serializers.ReadOnlyField(source='user.username')
+    following_id = serializers.ReadOnlyField(source='following.id')
+    following_username = serializers.ReadOnlyField(source='following.username')
 
     class Meta:
-        model = FollowRequest
+        model = Follow
         fields = [
-            'user',
-            'following',
+            'user_id',
+            'user_username',
+            'following_id',
+            'following_username',
         ]
 
 
 class FollowingListSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
+    user_username = serializers.ReadOnlyField(source='user.username')
+    following_id = serializers.ReadOnlyField(source='following.id')
+    following_username = serializers.ReadOnlyField(source='following.username')
 
     class Meta:
-        model = FollowRequest
+        model = Follow
         fields = [
             'id',
-            'user',
-            'following',
+            'user_id',
+            'user_username',
+            'following_id',
+            'following_username',
         ]
 
 

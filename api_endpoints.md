@@ -93,7 +93,7 @@ Data json:
 
 ```python
 {
-	"user_id": "<This field is required.>",
+	"user_id": "<This field is automatically populated.>",
 	"title": "<Not required>",
 	"message": "<This field is required.>",
 	"font": "<Default = Roboto>",
