@@ -19,6 +19,7 @@ Base URL: [https://quokka-cards.herokuapp.com/](https://quokka-cards.herokuapp.c
 |  | DELETE | /cards/:id/ | Delete Card |
 |  | GET | /cards/ | All Cards List |
 |  | GET | /cards/timeline/ | Timeline for Following Cards |
+|  | GET | /user/:id/ | User Detail Cards |
 |  | GET | /profile/ | Profile |
 
 ---
@@ -102,7 +103,7 @@ Response: Array of all users meeting the criteria of the search term
 
 ### Follow a User
 
-> /users/follow
+> /users/follow/
 > 
 
 Method: POST
@@ -181,7 +182,7 @@ Response: 201 Created
 
 ### Card Detail
 
-> /cards/:id/
+> /cards/:id
 > 
 
 Note: Id is the id of the card object
@@ -192,7 +193,7 @@ Response: Single card object
 
 ### Update Card
 
-> /cards/:id/
+> /cards/:id
 > 
 
 Method: PATCH
@@ -209,7 +210,7 @@ Response: 200 OK
 
 ### Delete Card
 
-> /cards/:id/
+> /cards/:id
 > 
 
 Note: Id is the id of the card to delete
@@ -262,9 +263,23 @@ Response: Array of all greeting cards
 
 ### Timeline for Following Cards
 
+> /cards/timeline/
+> 
+
 Method: GET
 
 Response: Array of cards created by users the logged in user is following
+
+### User Detail Cards
+
+> /users/:id
+> 
+
+Note: Id is the id of the user
+
+Method: GET
+
+Response: Array of cards created by another user
 
 ### Profile
 

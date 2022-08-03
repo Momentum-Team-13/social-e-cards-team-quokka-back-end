@@ -122,6 +122,18 @@ class CardTimeline(ListAPIView):
         return queryset.order_by("-created_at")
 
 
+# returns list of all cards created by another user
+class UserDetail(ListAPIView):
+    queryset = Card.objects.all().order_by("created_at")
+    serializer_class = CardListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user_id=self.kwargs['pk'])
+        # filter objects where user_id is the user pk kwarg
+        return queryset
+
+
 # returns list of all cards created by the user
 class Profile(ListAPIView):
     queryset = Card.objects.all().order_by("created_at")
@@ -130,7 +142,7 @@ class Profile(ListAPIView):
 
     def get_queryset(self):
         queryset = self.queryset.filter(user_id=self.request.user)
-        # filter objects where user_id is user making request
+        # filter objects where user_id is user making the request
         return queryset
 
 
@@ -141,7 +153,7 @@ class FollowingList(ListAPIView):
 
     def get_queryset(self):
         queryset = Follow.objects.filter(user=self.request.user)
-        # filter objects where user attribute is user making request
+        # filter objects where user attribute is user making the request
         return queryset
 
 
@@ -152,7 +164,7 @@ class FollowerList(ListAPIView):
 
     def get_queryset(self):
         queryset = Follow.objects.filter(following=self.request.user)
-        # filter objects where following attribute is user making request
+        # filter objects where following attribute is user making the request
         return queryset
 
 

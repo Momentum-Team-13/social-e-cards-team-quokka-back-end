@@ -43,10 +43,12 @@ urlpatterns = [
 
     # card endpoints
     path('cards/new/', ecard_views.NewCard.as_view(), name='new-card'),
-    path('cards/<int:pk>/', ecard_views.CardDetail.as_view(),
+    path('cards/<int:pk>', ecard_views.CardDetail.as_view(),
          name='card-detail'),
     path('cards/', ecard_views.CardList.as_view(), name='card-list'),
     path('cards/timeline/', ecard_views.CardTimeline.as_view(),
          name='card-timeline'),
+    path('users/<int:pk>', ecard_views.UserDetail.as_view(),
+         name='user-detail'),
     path('profile/', ecard_views.Profile.as_view(), name='profile'),
 ]
