@@ -153,7 +153,7 @@ class FollowingList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(user=self.request.user)
         # filter objects where user attribute is user making the request
-        return queryset.order_by("username")
+        return queryset.order_by("following_username")
 
 
 # returns list of users following the user making the request
@@ -164,7 +164,7 @@ class FollowerList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(following=self.request.user)
         # filter objects where following attribute is user making the request
-        return queryset.order_by("username")
+        return queryset.order_by("user_username")
 
 
 # returns list of all users
