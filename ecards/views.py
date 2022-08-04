@@ -19,7 +19,7 @@ Root API View
 def welcome(request):
     return Response({
         'team': 'Team Quokka',
-        'description': 'Back-end says heyyy 👋'
+        'description': 'Welcome to our app 👋'
     })
 
 
@@ -123,26 +123,26 @@ class CardTimeline(ListAPIView):
 
 # returns list of all cards created by another user
 class UserDetail(ListAPIView):
-    queryset = Card.objects.all().order_by("-created_at")
+    queryset = Card.objects.all()
     serializer_class = CardListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.queryset.filter(user_id=self.kwargs['pk'])
         # filter objects where user_id is the user pk kwarg
-        return queryset
+        return queryset.order_by("-created_at")
 
 
 # returns list of all cards created by the user
 class Profile(ListAPIView):
-    queryset = Card.objects.all().order_by("-created_at")
+    queryset = Card.objects.all()
     serializer_class = CardListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.queryset.filter(user_id=self.request.user)
         # filter objects where user_id is user making the request
-        return queryset
+        return queryset.order_by("-created_at")
 
 
 # returns list of users being followed by the user making the request
@@ -153,7 +153,7 @@ class FollowingList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(user=self.request.user)
         # filter objects where user attribute is user making the request
-        return queryset
+        return queryset.order_by("username")
 
 
 # returns list of users following the user making the request
@@ -164,7 +164,7 @@ class FollowerList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(following=self.request.user)
         # filter objects where following attribute is user making the request
-        return queryset
+        return queryset.order_by("username")
 
 
 # returns list of all users
@@ -172,13 +172,13 @@ class UserList(ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        queryset = User.objects.all().order_by("username")
+        queryset = User.objects.all()
         # establish queryset of all User objects ordered by username
         search_term = self.request.query_params.get("username")
         # establishes variable to get query params by "search" key "username"
         # if no keys match, will return None
         if search_term is not None:
-            queryset = User.objects.filter(username__icontains=search_term).order_by("username")
+            queryset = User.objects.filter(username__icontains=search_term)
             # overrides queryset when search_term is present
             # filter objects where username contains search_term
-        return queryset
+        return queryset.order_by("username")
