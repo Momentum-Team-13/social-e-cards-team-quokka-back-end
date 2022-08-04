@@ -37,6 +37,7 @@ class FollowUser(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
+        # this will prevent users from double following
         testquery = self.queryset.filter(following=self.request.data['following'], user=self.request.user)
         if len(testquery) == 0:
             serializer.save(user=self.request.user)
