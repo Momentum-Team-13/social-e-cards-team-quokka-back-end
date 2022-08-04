@@ -72,7 +72,7 @@ class UnfollowUser(DestroyAPIView):
         following_pk = self.kwargs
         # establishes variable for kwarg dictionary
         instance_of_follow_id = Follow.objects.filter(user=self.request.user, following=following_pk['pk']).first().id
-        breakpoint()
+        # breakpoint()
         # establishes variable to filter for Follow object id
         # of user-following relationship
         new_kwarg = {}
