@@ -1,5 +1,6 @@
+from cgi import test
 from django.shortcuts import get_object_or_404
-
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +10,7 @@ from .models import Card, Follow, User
 from .permissions import IsOwnerOrReadOnly
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
 
+from django.http import JsonResponse
 
 '''
 Root API View
@@ -35,7 +37,16 @@ class FollowUser(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        testquery = self.queryset.filter(following=self.request.data['following'], user=self.request.user)
+        if len(testquery) == 0:
+            serializer.save(user=self.request.user)
+            return
+        # response_data = {}
+        # return JsonResponse(response_data, status=501)  
+       
+        # content = {'you already follow them'}
+        # return Response(content, status=status.HTTP_501_NOT_IMPLEMENTED)
+    
         # when a Follow object is saved,
         # the user is set as the user that made the request
 
@@ -47,6 +58,7 @@ class NewCard(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
+        
         serializer.save(user_id=self.request.user)
         # when a Card object is saved,
         # the user_id is set as the user that made the request
