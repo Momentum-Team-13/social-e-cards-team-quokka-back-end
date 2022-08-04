@@ -147,10 +147,19 @@ del DATABASES['default']['OPTIONS']['sslmode']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+<<<<<<< HEAD
         'rest_framework.authentication.TokenAuthentication',),
     'DEFAULT_PAGINATION_CLASS': (
         'rest_framework.pagination.PageNumberPagination'),
     'PAGE_SIZE': 20
+=======
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    # 'DEFAULT_PAGINATION_CLASS': (
+    #     'rest_framework.pagination.PageNumberPagination',
+    # ),
+    # 'PAGE_SIZE': 20,
+>>>>>>> 49f6e778a89ee071939036ff8ccb9497a4364bc3
 }
 
 # for django-cors-headers
