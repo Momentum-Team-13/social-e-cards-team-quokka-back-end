@@ -123,7 +123,7 @@ class CardTimeline(ListAPIView):
 
 # returns list of all cards created by another user
 class UserDetail(ListAPIView):
-    queryset = Card.objects.all().order_by("created_at")
+    queryset = Card.objects.all().order_by("-created_at")
     serializer_class = CardListSerializer
     permission_classes = [IsAuthenticated]
 
@@ -135,7 +135,7 @@ class UserDetail(ListAPIView):
 
 # returns list of all cards created by the user
 class Profile(ListAPIView):
-    queryset = Card.objects.all().order_by("created_at")
+    queryset = Card.objects.all().order_by("-created_at")
     serializer_class = CardListSerializer
     permission_classes = [IsAuthenticated]
 
