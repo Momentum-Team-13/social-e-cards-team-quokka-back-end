@@ -153,5 +153,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-# for django-cors-headers
+# For django-cors-headers
 CORS_ALLOW_ALL_ORIGINS = True
