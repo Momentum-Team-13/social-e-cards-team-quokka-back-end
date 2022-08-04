@@ -10,9 +10,14 @@ class User(AbstractUser):
 
 class Follow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='follows')
+                            related_name='follows')
     following = models.ForeignKey(User, on_delete=models.CASCADE,
-                                  related_name='followers')
+                                related_name='followers')
+    
+    class Meta:
+	    constraints = [
+			models.UniqueConstraint(fields=['user', 'following'], name='unique_following')
+		]
 
 
 class Card(models.Model):
