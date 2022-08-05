@@ -9,7 +9,6 @@ from .models import Card, Follow, User
 from .permissions import IsOwnerOrReadOnly
 from .serializers import CardListSerializer, NewCardSerializer, UserSerializer, FollowSerializer, FollowingListSerializer
 
-
 '''
 Root API View
 '''
@@ -28,16 +27,21 @@ Create, Update, Destroy API Views
 '''
 
 
-# allows creation of Follow object
+# allows creation of unique Follow object
 class FollowUser(CreateAPIView):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        # when a Follow object is saved,
-        # the user is set as the user that made the request
+        unique_query = self.queryset.filter(following=self.request.data['following'], user=self.request.user)
+        # establishes variable for filtered queryset
+        if len(unique_query) == 0:
+            # conditional for if the unique query does not exist
+            serializer.save(user=self.request.user)
+            # when a Follow object is saved,
+            # the user is set as the user that made the request
+            return
 
 
 # allows creation of Card object
@@ -117,7 +121,7 @@ class CardTimeline(ListAPIView):
         for follow in following_list:
             following_cards = Card.objects.filter(user_id=follow.following)
             queryset = queryset | following_cards
-            # filter objects where user_id is following attribute ?
+            # filter objects where user_id is following attribute
         return queryset.order_by("-created_at")
 
 
@@ -153,7 +157,7 @@ class FollowingList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(user=self.request.user)
         # filter objects where user attribute is user making the request
-        return queryset.order_by("following_username")
+        return queryset
 
 
 # returns list of users following the user making the request
@@ -164,7 +168,7 @@ class FollowerList(ListAPIView):
     def get_queryset(self):
         queryset = Follow.objects.filter(following=self.request.user)
         # filter objects where following attribute is user making the request
-        return queryset.order_by("user_username")
+        return queryset
 
 
 # returns list of all users
